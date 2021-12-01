@@ -22,9 +22,8 @@ bool userInfo::login(string username, string password)
 }
 void userInfo::editAccount(string username) // replaceing the current user's info with the new infomation
 {
-    bool qe =false;
+    removeAccount(username);
     string w,p,e,an,aw;
-        unsigned int i=0;
         cout<<"Enter in your name: ";
         getline(cin,aw);
        cout<<"Enter in a password: ";
@@ -33,15 +32,21 @@ void userInfo::editAccount(string username) // replaceing the current user's inf
        getline(cin,e);
        cout<<"Enter a address: ";
        getline(cin,an);
+       //inserting the new infomation
+       email.push_back(e);
+       name.push_back(aw);
+       pass.push_back(p);
+       address.push_back(an);
+
 
 }
 void userInfo::createAccount()
 {
     string w,p,e,an,aw,er,co,qw,str;
         cout<<"Enter in your first name: ";
-        cin>>w;
+        getline(cin,w);
         cout<<"Enter in your last name: ";
-        cin>>co;
+        getline(cin,co);
         aw = w+"_"+co;
        cout<<"Enter in a password: ";
        getline(cin,p);
@@ -145,7 +150,17 @@ string ItemInfo::getitemName(string ID)
     return "Not listed";
 }
 
-
+double ItemInfo::getPrice(string ID)
+{
+    for(unsigned int i=0;i<itemID.size();i++)
+    {
+        if(itemID[i]==ID)
+        {
+            return Price[i];
+        }
+    }
+    return 0.00;
+}
 string ItemInfo::getItemID(string name)
 {
     for(unsigned int i=0;i<itemName.size();i++)
@@ -161,6 +176,7 @@ void ItemInfo::displayItem(string type)
 {
     for(unsigned int i=0;i<itemID.size();i++)
     {
+         cout<<endl;
         if(itemID[i].find(type)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
         {
         cout<<"Name: "<<itemName[i]<<endl;
@@ -195,23 +211,72 @@ void Cart::display()
 {
     ItemInfo pp;
     string nn,qq,ee;
+    int num=0,aa=0;
     for(int i=0;i<cart.size();i++)
     {
-        cout<<cart[i]<<endl;
         nn=cart[i];
-        qq=nn[0];
-        ee=nn[2]+nn[3]+nn[4]+nn[5]+nn[6]+nn[7]+nn[8];
-        int to = stoi(qq);
-
+        int to = stoi(cart[i]);
+         aa=to;
+        while(aa!=0)
+        {
+            aa/=10;
+            num++;
+        }
+        nn.erase(0,num);
+        nn.erase(0,1);
+        num=0;
+        cout<<"Name: "<<pp.getitemName(nn)<<endl;
+        cout<<"Amount wanted: "<<to<<endl;
+         cout<<endl;
     }
 
 }
-int Cart::totalPrice(string name)
+double Cart::totalPrice(string ID,int amount)
 {
-
+    ItemInfo pp;
+    double qe =pp.getPrice(ID);
+    double rr=qe*amount;
+    return rr;
 }
 void Cart::addItem(string qr)
 {
     cart.push_back(qr);
 }
-void removeItem(string qr);
+bool Cart::removeItem(string qr)
+{
+    for(unsigned int i=0;i<cart.size();i++)
+    {
+        if(cart[i].find(qr)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
+        {
+            cart.erase(cart.begin()+i);
+            return true;
+        }
+    }
+    return false;
+}
+
+void Cart::checkout()
+{
+    ItemInfo pp;
+    string nn,qq,ee;
+    int num=0,aa=0;
+    double ad=0;
+    for(int i=0;i<cart.size();i++)
+    {
+        nn=cart[i];
+        int to = stoi(cart[i]);
+         aa=to;
+        while(aa!=0)
+        {
+            aa/=10;
+            num++;
+        }
+        nn.erase(0,num);
+        nn.erase(0,1);
+        num=0;
+        double t=totalPrice(nn,to);
+        ad+=t;
+    }
+    cout<<"Total Price: "<<ad<<endl;
+     cout<<endl;
+}

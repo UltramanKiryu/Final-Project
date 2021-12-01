@@ -47,7 +47,6 @@ int main()
     Cart q;
     bool hh=false;
     bool qq= false;
-    /*
    do {
         cout<<"Do you have an account Y/N: ";
         getline(cin,qu);
@@ -74,14 +73,13 @@ int main()
 
         }
     } while (hh==false);
-    */
     do {
         cout<<"Welcome to the Team 24 e-commerce"<<endl;
         //display the name of a catagories
         cout<<"Type one of the following the catagories to display the "<<endl;
         cout<<"Jewels "<<" "<<"Toys"<<" "<<"Movies "<<" "<<"Food"<<endl;
         cout<<"type display- display your profile"<<endl;
-        cout<<"type proceed- proceed to checkout"<<endl;
+        cout<<"type View Cart- to view you cart"<<endl;
         cout<<"type edit - edit your account"<<endl;
         cout<<"type exit -exit the program"<<endl;
        cout<<">> ";
@@ -189,10 +187,71 @@ int main()
        }
        else if (ss=="display")
        {
-           q.display();
+           u.displayUser(username);
+           cout<<endl;
        }
-       else if (ss=="proceed")
+       else if (ss=="View Cart")
        {
+           string w,l;
+           cout<<"Your Cart"<<endl;
+           q.display();
+            cout<<endl;
+           while(w!="back")
+           {
+               cout<<"type proceed- to proceed to checkout"<<endl;
+               cout<<"type remove - to remove an item from your list"<<endl;
+               cout<<"type go back to return to main menu"<<endl;
+               cout<<">>: ";
+               getline(cin,w);
+            if(w=="remove")
+            {
+                string mm;
+                cout<<endl;
+                cout<<"type the name of which item you want to delete"<<endl;
+                cout<<"type back to return to main menu"<<endl;
+                cout<<">>: ";
+                getline(cin,w);
+                mm=pp.getItemID(w);
+                bool as =q.removeItem(mm);
+                if(as==true)
+                {
+                    cout<<"The Item has been removed"<<endl;
+                }
+                else
+                {
+                    cout<<"The item is not in your cart"<<endl;
+                }
+            }
+            else if(w =="proceed")
+            {
+                cout<<endl;
+                cout<<"...Proceeding to checkout"<<endl;
+                q.checkout();
+                string mm;
+                while(mm!="back"){
+                    cout<<endl;
+                cout<<"type continue to pay for you order:"<<endl;
+                cout<<"type back to return to main menu"<<endl;
+                cout<<">>: ";
+                getline(cin,mm);
+                if(mm=="continue")
+                {
+                    u.displayUser(username);
+                     cout<<endl;
+                    cout<<"Is this the correct infomation"<<endl;
+                    cout<<"type yes to confirm"<<endl;
+                    cout<<"type back to return to main menu"<<endl;
+                     cout<<">>: ";
+                      getline(cin,mm);
+                    if(mm=="yes")
+                    {
+                        cout<<"Thnak you for your pruchase"<<endl;
+                        w="back";
+                    }
+                }
+                }
+            }
+           }
        }
        else if (ss=="edit")
        {
@@ -209,97 +268,4 @@ int main()
 return 0;
 
 }
-void selection(string type)
-{
-    ItemInfo pp;
-    Cart q;
-    string want,amu;
-    while(want !="go back"){
-    if(type=="Jewels")
-    {
-        cout<<"Welcome to the Jewels catagory"<<endl;
-        pp.displayItem("JW");// this will only display the jewels items
-        cout<<"Type the name of what you want to buy or type go back to return to the main menu: ";
-        getline(cin,want);
-        if(want !="go back"){
-        cout<<"Type in the amount you want to buy: ";
-        getline(cin,amu);
-        bool tt=pp.quantiy_check(want,amu);
-        if(tt==true)
-        {
-            string cq= amu+"x"+pp.getItemID(want);
-            q.addItem(cq);
 
-
-        }
-        else
-        {
-            cout<<"Sorry, we do not have the amount that you requested"<<endl;
-        }
-        }
-    }
-    else if (type=="Movies")
-    {
-        cout<<"Welcome to the Movies catagory"<<endl;
-        pp.displayItem("MV");// this will only display the Moies items
-        cout<<"Which one you want to buy or type go back to return to the main menu: ";
-        getline(cin,want);
-         if(want !="go back"){
-        cout<<"Type in the amount you want to buy: ";
-        getline(cin,amu);
-        bool tt=pp.quantiy_check(want,amu);
-        if(tt==true)
-        {
-            string cq= amu+"x"+pp.getItemID(want);
-            q.addItem(cq);
-        }
-        else
-        {
-            cout<<"Sorry, we do not have the amount that you requested"<<endl;
-        }
-         }
-    }
-    else if (type=="Toys")
-    {
-         cout<<"Welcome to the Toys catagory"<<endl;
-        pp.displayItem("TO");// this will only display the Toys items
-        cout<<"Which one you want to buy or type go back to return to the main menu: ";
-        getline(cin,want);
-         if(want !="go back"){
-        cout<<"Type in the amount you want to buy: ";
-        getline(cin,amu);
-        bool tt=pp.quantiy_check(want,amu);
-        if(tt==true)
-        {
-            string cq= amu+"x"+pp.getItemID(want);
-            q.addItem(cq);
-        }
-        else
-        {
-            cout<<"Sorry, we do not have the amount that you requested"<<endl;
-        }
-         }
-    }
-    else if (type=="Food")
-    {
-        cout<<"Welcome to the Toys catagory"<<endl;
-       pp.displayItem("TO");// this will only display the Toys items
-       cout<<"Which one you want to buy or type go back to return to the main menu: ";
-       getline(cin,want);
-        if(want !="go back"){
-       cout<<"Type in the amount you want to buy: ";
-       getline(cin,amu);
-       bool tt=pp.quantiy_check(want,amu);
-       if(tt==true)
-       {
-           string cq= amu+"x"+pp.getItemID(want);
-           q.addItem(cq);
-       }
-       else
-       {
-           cout<<"Sorry, we do not have the amount that you requested"<<endl;
-       }
-        }
-    }
-    }
-}

@@ -39,7 +39,7 @@ private:
 public:
     string getItemID(string name);
     string getitemName(string ID);
-    double getPrice();
+    double getPrice(string ID);
     int getInventory();
     void displayItem(string type);
     bool quantiy_check(string name,string amount);
@@ -53,10 +53,11 @@ private:
 
 public:
     void display();
-    int totalPrice(string name);
+    double totalPrice(string ID,int amount);
     void addItem(string qr);
-    void removeItem(string qr);
-    void checkout(string username);
+    bool removeItem(string qr);
+    void checkout();
+    bool purchase();
 
 };
 #endif // USER_H
