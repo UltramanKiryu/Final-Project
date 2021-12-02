@@ -7,21 +7,34 @@
 #include"user.h"
 using namespace std;
 
-void selection(string type);
-
 int main()
 {
-    /*
+
     ifstream infile;
     ofstream outfile;
-    string ttk1,ttk2;
+    string ttk1,ttk2,ttk3,ttk4,ttk5;
     int num1;
-    vector<string>name ={"Andrew","Banks"};
-    vector<int>UserID;
-    vector<string>email;
-    vector<string>address;
-    vector<string>pass={"1a1a1","dd1d1d1"};
-    infile.open("Name.txt");
+    float flo1;
+    userInfo u;
+    ItemInfo pp;
+    Cart q;
+
+    infile.open("Username.txt");// insert
+    if(!infile.is_open())
+    {
+        cout<<"Error opening."<<endl;
+        return 1;
+    }
+    while(!infile.eof())
+    {
+    infile >>ttk1>>ttk2>>ttk3>>ttk4>>ttk5;
+    if(!infile.fail())
+    {
+        u.insertUser(ttk1,ttk2,ttk3,ttk4,ttk5);
+    }
+    }
+    infile.close();
+    infile.open("inventory.txt");// insert
 
     if(!infile.is_open())
     {
@@ -30,21 +43,16 @@ int main()
     }
     while(!infile.eof())
     {
-    infile >>num1 >> ttk1;
+    infile >>ttk2>>ttk1>>num1>>flo1;
     if(!infile.fail())
     {
-        UserID.push_back(num1);
-        name.push_back(ttk1);
-
+        pp.insertItem(ttk1,ttk2,num1,flo1);
     }
     }
     infile.close();
-    */
+
     string username, password,qu,cat,wan;
     string ss;
-    userInfo u;
-    ItemInfo pp;
-    Cart q;
     bool hh=false;
     bool qq= false;
    do {
@@ -87,13 +95,13 @@ int main()
        if(ss=="Jewels")
        {
            string want,amu;
-           while(want !="go back")
+           while(want !="back")
            {
                cout<<"Welcome to the Jewels catagory"<<endl;
                pp.displayItem("JW");// this will only display the jewels items
                cout<<"Type the name of what you want to buy or type go back to return to the main menu: ";
                getline(cin,want);
-               if(want !="go back"){
+               if(want !="back"){
                cout<<"Type in the amount you want to buy: ";
                getline(cin,amu);
                bool tt=pp.quantiy_check(want,amu);
@@ -115,12 +123,12 @@ int main()
        else if (ss=="Movies")
        {
            string want,amu;
-           while(want !="go back"){
+           while(want !="back"){
            cout<<"Welcome to the Movies catagory"<<endl;
            pp.displayItem("MV");// this will only display the Moies items
            cout<<"Which one you want to buy or type go back to return to the main menu: ";
            getline(cin,want);
-            if(want !="go back"){
+            if(want !="back"){
            cout<<"Type in the amount you want to buy: ";
            getline(cin,amu);
            bool tt=pp.quantiy_check(want,amu);
@@ -139,12 +147,12 @@ int main()
        else if (ss=="Toys")
        {
            string want,amu;
-           while(want !="go back"){
+           while(want !="back"){
            cout<<"Welcome to the Toys catagory"<<endl;
           pp.displayItem("TO");// this will only display the Toys items
-          cout<<"Which one you want to buy or type go back to return to the main menu: ";
+          cout<<"Which one you want to buy or type back to return to the main menu: ";
           getline(cin,want);
-           if(want !="go back"){
+           if(want !="back"){
           cout<<"Type in the amount you want to buy: ";
           getline(cin,amu);
           bool tt=pp.quantiy_check(want,amu);
@@ -163,13 +171,13 @@ int main()
        else if (ss=="Food")
        {
           string want,amu;
-          while(want !="go back")
+          while(want !="back")
           {
               cout<<"Welcome to the Toys catagory"<<endl;
              pp.displayItem("TO");// this will only display the Toys items
-             cout<<"Which one you want to buy or type go back to return to the main menu: ";
+             cout<<"Which one you want to buy or type back to return to the main menu: ";
              getline(cin,want);
-              if(want !="go back"){
+              if(want !="back"){
              cout<<"Type in the amount you want to buy: ";
              getline(cin,amu);
              bool tt=pp.quantiy_check(want,amu);
@@ -200,7 +208,7 @@ int main()
            {
                cout<<"type proceed- to proceed to checkout"<<endl;
                cout<<"type remove - to remove an item from your list"<<endl;
-               cout<<"type go back to return to main menu"<<endl;
+               cout<<"type back to return to main menu"<<endl;
                cout<<">>: ";
                getline(cin,w);
             if(w=="remove")
@@ -246,7 +254,9 @@ int main()
                     if(mm=="yes")
                     {
                         cout<<"Thnak you for your pruchase"<<endl;
+                        //q.purchase();
                         w="back";
+                        mm="back";
                     }
                 }
                 }
@@ -264,7 +274,8 @@ int main()
        //if the user want to exit the program they type exit
     } while (ss!="exit");
     //when the user exits the input screen use the out line function to reinsert the vector infomation back into their apporite files
-
+   string str= q.is_Empty(username);
+   string tte=u.getUserID(username);
 return 0;
 
 }

@@ -40,6 +40,15 @@ void userInfo::editAccount(string username) // replaceing the current user's inf
 
 
 }
+
+void userInfo::insertUser(string na, string ID, string mail, string add, string password)
+{
+    email.push_back(mail);
+    name.push_back(na);
+    pass.push_back(password);
+    address.push_back(add);
+    UserID.push_back(ID);
+}
 void userInfo::createAccount()
 {
     string w,p,e,an,aw,er,co,qw,str;
@@ -55,7 +64,7 @@ void userInfo::createAccount()
        cout<<"Enter a address: ";
        getline(cin,an);
 
-       int random = 100+(rand()%101);
+       int random = 100+(rand()%201);
        str=to_string(random);
        er= w[0];
        qw =co[0];
@@ -85,21 +94,23 @@ bool userInfo::removeAccount(string word)
     }
     return false;
 }
-void userInfo::displayUser(string word)
+void userInfo::displayUser(string username)
 {
     userInfo u;
     for(unsigned int i=0;i<name.size();i++)
     {
-        if(word==name[i])
+
+        if(username==name[i])
         {
             cout<<endl;
             cout<<"Name: "<<name[i]<<endl;
-            cout<<"UserID: "<<u.getUserID(name[i])<<endl;
-            cout<<"Address: "<<u.getAddress(name[i])<<endl;
-            cout<<"Email: "<<u.getEmail(name[i])<<endl;
+            cout<<"UserID: "<<getUserID(name[i])<<endl;
+            cout<<"Address: "<<getAddress(name[i])<<endl;
+            cout<<"Email: "<<getEmail(name[i])<<endl;
             cout<<endl;
 
         }
+
 
     }
 }
@@ -140,17 +151,29 @@ string userInfo::getEmail(string word)
 
 string ItemInfo::getitemName(string ID)
 {
-    for(unsigned int i=0;i<itemID.size();i++)
+    for(int i=0;i<itemID.size();i++)
     {
-        if(itemID[i]==ID)
+        if(ID==itemID[i])
         {
+            cout<<itemName[i]<<endl;
             return itemName[i];
         }
     }
     return "Not listed";
 }
 
-double ItemInfo::getPrice(string ID)
+int ItemInfo::getInventory(string ID)
+{
+    for(unsigned int i=0;i<itemID.size();i++)
+    {
+        if(itemID[i]==ID)
+        {
+            return quaitiy[i];
+        }
+    }
+    return 0;
+}
+float ItemInfo::getPrice(string ID)
 {
     for(unsigned int i=0;i<itemID.size();i++)
     {
@@ -172,11 +195,19 @@ string ItemInfo::getItemID(string name)
     }
     return "Not listed";
 }
+void ItemInfo::insertItem(string name, string ID, float pr, int qu)
+{
+    itemName.push_back(name);
+    itemID.push_back(ID);
+    Price.push_back(pr);
+    quaitiy.push_back(qu);
+}
+
+
 void ItemInfo::displayItem(string type)
 {
     for(unsigned int i=0;i<itemID.size();i++)
     {
-         cout<<endl;
         if(itemID[i].find(type)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
         {
         cout<<"Name: "<<itemName[i]<<endl;
@@ -207,11 +238,31 @@ bool ItemInfo::quantiy_check(string name,string amount)
     }
     return false; // if the amount requested by the user is greater than what is in stock
 }
+
+void ItemInfo::ItemOrder(string name,int amount)
+{
+    int we=0,te,e=0;
+    for(unsigned int i=0; i<itemName.size();i++)
+    {
+        if(name==itemName[i])
+        {
+            te =getInventory(itemID[i]);
+            te=te-amount;
+            e=we;
+        }
+        we++;
+    }
+    quaitiy.insert(quaitiy.begin()+e,te);
+
+}
+
 void Cart::display()
 {
     ItemInfo pp;
     string nn,qq,ee;
     int num=0,aa=0;
+    string tt="JW-0001";
+    cout<<"Name: "<<pp.getitemName(tt)<<endl;
     for(int i=0;i<cart.size();i++)
     {
         nn=cart[i];
@@ -225,22 +276,28 @@ void Cart::display()
         nn.erase(0,num);
         nn.erase(0,1);
         num=0;
-        cout<<"Name: "<<pp.getitemName(nn)<<endl;
+        string tt="JW-0001";
+        cout<<"Name: "<<pp.getitemName(tt)<<endl;
         cout<<"Amount wanted: "<<to<<endl;
          cout<<endl;
     }
 
 }
-double Cart::totalPrice(string ID,int amount)
+float Cart::totalPrice(string ID,int amount)
 {
     ItemInfo pp;
-    double qe =pp.getPrice(ID);
-    double rr=qe*amount;
+    float qe =pp.getPrice(ID);
+    float rr=qe*amount;
     return rr;
 }
 void Cart::addItem(string qr)
 {
+    cout<<qr<<endl;
     cart.push_back(qr);
+}
+void Cart::insertCart(string car)
+{
+    cart.push_back(car);
 }
 bool Cart::removeItem(string qr)
 {
@@ -260,7 +317,7 @@ void Cart::checkout()
     ItemInfo pp;
     string nn,qq,ee;
     int num=0,aa=0;
-    double ad=0;
+    float ad=0;
     for(int i=0;i<cart.size();i++)
     {
         nn=cart[i];
@@ -274,9 +331,32 @@ void Cart::checkout()
         nn.erase(0,num);
         nn.erase(0,1);
         num=0;
-        double t=totalPrice(nn,to);
+        float t=totalPrice(nn,to);
         ad+=t;
+         //pp.ItemOrder(nn,to);
     }
     cout<<"Total Price: "<<ad<<endl;
      cout<<endl;
+}
+
+bool Cart::purchase()
+{ItemInfo pp;
+
+    cart.clear();
+    return true;
+}
+
+
+string Cart::is_Empty(string username)
+{
+    if(!cart.empty())
+    {
+        string trs;
+        // insert the vector back into the txt file
+        for(int i=0;i<cart.size();i++)
+        {
+            trs+=cart[i]+"_";
+        }
+        return trs;
+    }
 }

@@ -9,22 +9,23 @@ using namespace std;
 class userInfo
 {
 private:
-    vector<string>name ={"Andrew","Banks"};
-    vector<string>UserID={"an1010","ba1021"};
-    vector<string>email={"godzillamaster.gmail"};
-    vector<string>address={"1811 Nottaway drive"};
-    vector<string>pass={"1a1a1","dd1d1d1"};
+    vector<string>name;
+    vector<string>UserID;
+    vector<string>email;
+    vector<string>address;
+    vector<string>pass;
 
 public:
     userInfo();
-    bool login(string username, string password);
+    void insertUser(string name,string ID,string mail,string add,string password);
     string getUserID(string word);
     string getAddress(string word);
     string getEmail(string word);
-    void displayUser(string name);
+    void displayUser(string username);
     void editAccount(string username);
     void createAccount();
     bool removeAccount(string word);
+    bool login(string username, string password);
 
 
 };
@@ -32,19 +33,22 @@ public:
 class ItemInfo
 {
 private:
-    vector<string>itemName={"Ruby","Quartz","Emerald","Godzilla","Avengers","Twlight"};
-    vector<string>itemID={"JW-0001","JW-0002","JW-5001","MV-3332","MV-4546"," MV-7574"};
-    vector<double>Price={12.20,120.00,514.00,10.00,12.20,20.00};
-    vector<int>quaitiy={12,0,15,2,6,0};
+    vector<string>itemName;
+    vector<string>itemID;
+    vector<float>Price;
+    vector<int>quaitiy;
 public:
+    void insertItem(string name,string ID,float pr,int qu);
+    void displayItem(string type);
+    void ItemOrder(string name,int amount);
     string getItemID(string name);
     string getitemName(string ID);
-    double getPrice(string ID);
-    int getInventory();
-    void displayItem(string type);
+    int getInventory(string ID);
+    float getPrice(string ID);
     bool quantiy_check(string name,string amount);
 
 };
+
 
 class Cart
 {
@@ -53,10 +57,12 @@ private:
 
 public:
     void display();
-    double totalPrice(string ID,int amount);
     void addItem(string qr);
-    bool removeItem(string qr);
     void checkout();
+    void insertCart(string car);
+    string is_Empty(string username);
+    float totalPrice(string ID,int amount);
+    bool removeItem(string qr);
     bool purchase();
 
 };
