@@ -1,8 +1,31 @@
-#include "user.h"
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include<fstream>
+#include<vector>
+#include<cstdlib>
+#include"user.h"
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<string> getNextLineAndSplitIntoTokens(istream& str);
 
 userInfo::userInfo()
 {
+    ifstream inputFile("users.csv");
+    vector<string> newList;
 
+    while(!inputFile.eof()){
+        newList = getNextLineAndSplitIntoTokens(inputFile);
+        if(newList.size() <= 3){
+            break;
+        }
+        UserID.push_back(newList[0]);
+        name.push_back(newList[1]);
+        email.push_back(newList[2]);
+        address.push_back(newList[3]);
+        pass.push_back(newList[4]);
+    }
 }
 bool userInfo::login(string username, string password)
 {
@@ -149,6 +172,60 @@ string userInfo::getEmail(string word)
     return "Not listed";
 }
 
+void userInfo::exportUsers(string currentUser){
+    ifstream inputFile("users.csv");
+    ofstream outputFile("temp.csv");
+    string tempstr;
+    int count = 0;
+    
+    while(!inputFile.eof())
+    {
+        vector<string> newList = getNextLineAndSplitIntoTokens(inputFile);
+        if (newList.size() <= 3){
+            break;
+        }
+        if(newList[1] == currentUser){
+            currentUser = "";
+            tempstr = "";
+            tempstr.append(UserID[count]);
+            tempstr.append(",");
+            tempstr.append(name[count]);
+            tempstr.append(",");
+            tempstr.append(email[count]);
+            tempstr.append(",");
+            tempstr.append(address[count]);
+            tempstr.append(",");
+            tempstr.append(pass[count]);
+        }
+        else{
+            tempstr = "";
+            for(int i = 0; i < newList.size(); i++){
+                tempstr.append(newList[i]);
+                tempstr.append(",");
+            }
+            tempstr.pop_back();
+        }
+        outputFile << tempstr << endl;
+        count += 1;
+
+    }
+    if(currentUser != ""){
+        currentUser = "";
+        tempstr = "";
+        tempstr.append(UserID[count]);
+        tempstr.append(",");
+        tempstr.append(name[count]);
+        tempstr.append(",");
+        tempstr.append(email[count]);
+        tempstr.append(",");
+        tempstr.append(address[count]);
+        tempstr.append(",");
+        tempstr.append(pass[count]);
+        outputFile << tempstr << endl;
+    }
+    rename("temp.csv", "users.csv");
+}
+
 string ItemInfo::getitemName(string ID)
 {
     for(int i=0;i<itemID.size();i++)
@@ -256,6 +333,20 @@ void ItemInfo::ItemOrder(string name,int amount)
 
 }
 
+Cart::Cart(){
+    ifstream inputFile("users.csv");
+
+    vector<string> newList;
+    int count = 0;
+
+    while(inputFile){
+        newList = getNextLineAndSplitIntoTokens(inputFile);
+        for(int i = 5; i < newList.size(); i++){
+            addItem(newList[i]);
+        }
+    }
+}
+
 void Cart::display()
 {
     ItemInfo pp;
@@ -359,4 +450,54 @@ string Cart::is_Empty(string username)
         }
         return trs;
     }
+}
+
+void Cart::exportUsers(string currentUser){
+    ifstream inputFile("users.csv");
+    ofstream outputFile("temp.csv");
+    string tempstr;
+    int count;
+    while(!inputFile.eof())
+    {
+         vector<string> newList = getNextLineAndSplitIntoTokens(inputFile);
+        if(newList[1] == currentUser && cart.size() > 0){
+            tempstr = ","; 
+            for(int i = 0; i < cart.size(); i++){
+                tempstr = tempstr + cart[i] + ",";
+            }
+        }
+        else{
+            tempstr = "";
+            for(int i = 0; i < newList.size(); i++){
+                tempstr = tempstr + newList[i] + ",";
+            }
+        }
+        outputFile << tempstr << endl;
+        count += 1;
+
+    }
+    rename("temp.csv", "users.csv");
+}
+
+
+// Tokenizes each comma-separated item from an input file stream for a single line
+vector<string> getNextLineAndSplitIntoTokens(istream& str)
+{
+    vector<string> result;
+    string line, cell;
+    getline(str,line);
+
+    stringstream lineStream(line);
+
+    while(getline(lineStream,cell, ','))
+    {
+        result.push_back(cell);
+    }
+    // This checks for a trailing comma with no data after it.
+    if (!lineStream && cell.empty())
+    {
+        // If there was a trailing comma then add an empty element.
+        result.push_back("");
+    }
+    return result;
 }

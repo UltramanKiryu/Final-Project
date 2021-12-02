@@ -26,6 +26,7 @@ public:
     void createAccount();
     bool removeAccount(string word);
     bool login(string username, string password);
+    void exportUsers(string currentUser);
 
 
 };
@@ -56,6 +57,7 @@ private:
     vector<string>cart;
 
 public:
+    Cart();
     void display();
     void addItem(string qr);
     void checkout();
@@ -64,6 +66,7 @@ public:
     float totalPrice(string ID,int amount);
     bool removeItem(string qr);
     bool purchase();
+    void exportUsers(string currentUser);
 
 };
 #endif // USER_H
