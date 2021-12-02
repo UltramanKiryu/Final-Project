@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <sstream>
 #include<fstream>
 #include<vector>
 #include<cstdlib>
@@ -10,12 +11,46 @@ using namespace std;
 int main()
 {
 
+    ifstream infile;
+    ofstream outfile;
+    string ttk1,ttk2,ttk3,ttk4,ttk5;
     int num1;
     float flo1;
-    userInfo u; 
+    userInfo u;
     ItemInfo pp;
-    Cart q;
+    shop q;
+    vector<string>qqq;
+    infile.open("Username.txt");// insert
+    if(!infile.is_open())
+    {
+        cout<<"Error opening."<<endl;
+        return 1;
+    }
+    while(!infile.eof())
+    {
+    infile >>ttk1>>ttk2>>ttk3>>ttk4>>ttk5;
+    if(!infile.fail())
+    {
+        u.insertUser(ttk1,ttk2,ttk3,ttk4,ttk5);
+    }
+    }
+    infile.close();
+    infile.open("inventory.txt");// insert
 
+    if(!infile.is_open())
+    {
+        cout<<"Error opening."<<endl;
+        return 1;
+    }
+    while(!infile.eof())
+    {
+    infile >>ttk2>>ttk1>>num1>>flo1;
+    if(!infile.fail())
+    {
+        pp.insertItem(ttk1,ttk2,num1,flo1);
+    }
+    }
+    infile.close();
 
     string username, password,qu,cat,wan;
     string ss;
@@ -74,8 +109,7 @@ int main()
                if(tt==true)
                {
                    string cq= amu+"x"+pp.getItemID(want);
-                   q.addItem(cq);
-
+                  qqq.push_back(cq);
 
                }
                else
@@ -101,7 +135,8 @@ int main()
            if(tt==true)
            {
                string cq= amu+"x"+pp.getItemID(want);
-               q.addItem(cq);
+               qqq.push_back(cq);
+
            }
            else
            {
@@ -125,7 +160,7 @@ int main()
           if(tt==true)
           {
               string cq= amu+"x"+pp.getItemID(want);
-              q.addItem(cq);
+              qqq.push_back(cq);
           }
           else
           {
@@ -150,7 +185,8 @@ int main()
              if(tt==true)
              {
                  string cq= amu+"x"+pp.getItemID(want);
-                 q.addItem(cq);
+                 qqq.push_back(cq);
+
              }
              else
              {
@@ -161,14 +197,31 @@ int main()
        }
        else if (ss=="display")
        {
-           u.displayUser(username);
+          u.displayUser(username);
            cout<<endl;
        }
        else if (ss=="View Cart")
        {
-           string w,l;
+           string w,l,nn;
+           float ad=0;
+           int to=0, aa=0,num=0;
            cout<<"Your Cart"<<endl;
-           q.display();
+           for(int i=0;i<qqq.size();i++)
+           {
+               nn=qqq[i];
+               to = stoi(nn);
+               aa=to;
+              while(aa!=0)
+              {
+                  aa/=10;
+                  num++;
+              }
+              nn.erase(0,num);
+              nn.erase(0,1);
+              num=0;
+              cout<<"Name: "<<pp.getitemName(nn)<<endl;
+              cout<<"Amount wanted: "<< to<<endl;
+           }
             cout<<endl;
            while(w!="back")
            {
@@ -179,14 +232,20 @@ int main()
                getline(cin,w);
             if(w=="remove")
             {
-                string mm;
+                string mm;bool as=false;
                 cout<<endl;
                 cout<<"type the name of which item you want to delete"<<endl;
                 cout<<"type back to return to main menu"<<endl;
                 cout<<">>: ";
                 getline(cin,w);
                 mm=pp.getItemID(w);
-                bool as =q.removeItem(mm);
+                for(int i=0;i<qqq.size();i++){
+                    if(qqq[i].find(mm)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
+                    {
+                        qqq.erase(qqq.begin()+i);
+                        as =true;
+                    }
+                }
                 if(as==true)
                 {
                     cout<<"The Item has been removed"<<endl;
@@ -200,7 +259,25 @@ int main()
             {
                 cout<<endl;
                 cout<<"...Proceeding to checkout"<<endl;
-                q.checkout();
+                for(int i=0;i<qqq.size();i++)
+                {
+                    nn=qqq[i];
+                    int to = stoi(nn);
+                     aa=to;
+                    while(aa!=0)
+                    {
+                        aa/=10;
+                        num++;
+                    }
+                    nn.erase(0,num);
+                    nn.erase(0,1);
+                    num=0;
+                    float t=pp.totalPrice(nn,to);
+                    ad+=t;
+                     pp.ItemOrder(nn,to);
+                }
+                cout<<"Total Price: "<<ad<<endl;
+                 cout<<endl;
                 string mm;
                 while(mm!="back"){
                     cout<<endl;
@@ -219,8 +296,8 @@ int main()
                       getline(cin,mm);
                     if(mm=="yes")
                     {
-                        cout<<"Thnak you for your pruchase"<<endl;
-                        //q.purchase();
+                        cout<<"Thank you for your purchase"<<endl;
+                        qqq.clear();
                         w="back";
                         mm="back";
                     }
@@ -240,8 +317,23 @@ int main()
        //if the user want to exit the program they type exit
     } while (ss!="exit");
     //when the user exits the input screen use the out line function to reinsert the vector infomation back into their apporite files
-    u.exportUsers(username);
-    //q.exportUsers(username);
+   string tte=u.getUserID(username);
+   string trs;
+   if(!qqq.empty())
+   {
+       // insert the vector back into the txt file
+       for(int i=0;i<qqq.size();i++)
+       {
+           trs+=qqq[i]+"_";
+       }
+   }
+   outfile.open("Cart.txt"); // this will delete whatever is in the text file
+   if(!outfile.is_open())
+   {
+       cout<<"Error opening."<<endl;
+   }
+   outfile<<tte<<trs<<endl;
+   outfile.close();
 return 0;
 
 }

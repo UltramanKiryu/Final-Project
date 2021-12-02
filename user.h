@@ -26,7 +26,6 @@ public:
     void createAccount();
     bool removeAccount(string word);
     bool login(string username, string password);
-    void exportUsers(string currentUser);
 
 
 };
@@ -45,28 +44,26 @@ public:
     string getItemID(string name);
     string getitemName(string ID);
     int getInventory(string ID);
-    float getPrice(string ID);
+    double getPrice(string ID);
+    float totalPrice(string ID,int amount);
     bool quantiy_check(string name,string amount);
 
 };
 
 
-class Cart
+class shop
 {
 private:
-    vector<string>cart;
+    vector<string>ca;
 
 public:
-    Cart();
-    void display();
+    void display(vector<string>&list);
     void addItem(string qr);
-    void checkout();
+    void checkout(vector<string>&list);
     void insertCart(string car);
     string is_Empty(string username);
-    float totalPrice(string ID,int amount);
     bool removeItem(string qr);
     bool purchase();
-    void exportUsers(string currentUser);
 
 };
 #endif // USER_H

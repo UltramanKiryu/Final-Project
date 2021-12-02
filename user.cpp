@@ -1,31 +1,8 @@
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include<fstream>
-#include<vector>
-#include<cstdlib>
-#include"user.h"
-#include <bits/stdc++.h>
-using namespace std;
-
-vector<string> getNextLineAndSplitIntoTokens(istream& str);
+#include "user.h"
 
 userInfo::userInfo()
 {
-    ifstream inputFile("users.csv");
-    vector<string> newList;
 
-    while(!inputFile.eof()){
-        newList = getNextLineAndSplitIntoTokens(inputFile);
-        if(newList.size() <= 3){
-            break;
-        }
-        UserID.push_back(newList[0]);
-        name.push_back(newList[1]);
-        email.push_back(newList[2]);
-        address.push_back(newList[3]);
-        pass.push_back(newList[4]);
-    }
 }
 bool userInfo::login(string username, string password)
 {
@@ -172,62 +149,9 @@ string userInfo::getEmail(string word)
     return "Not listed";
 }
 
-void userInfo::exportUsers(string currentUser){
-    ifstream inputFile("users.csv");
-    ofstream outputFile("temp.csv");
-    string tempstr;
-    int count = 0;
-    
-    while(!inputFile.eof())
-    {
-        vector<string> newList = getNextLineAndSplitIntoTokens(inputFile);
-        if (newList.size() <= 3){
-            break;
-        }
-        if(newList[1] == currentUser){
-            currentUser = "";
-            tempstr = "";
-            tempstr.append(UserID[count]);
-            tempstr.append(",");
-            tempstr.append(name[count]);
-            tempstr.append(",");
-            tempstr.append(email[count]);
-            tempstr.append(",");
-            tempstr.append(address[count]);
-            tempstr.append(",");
-            tempstr.append(pass[count]);
-        }
-        else{
-            tempstr = "";
-            for(int i = 0; i < newList.size(); i++){
-                tempstr.append(newList[i]);
-                tempstr.append(",");
-            }
-            tempstr.pop_back();
-        }
-        outputFile << tempstr << endl;
-        count += 1;
-
-    }
-    if(currentUser != ""){
-        currentUser = "";
-        tempstr = "";
-        tempstr.append(UserID[count]);
-        tempstr.append(",");
-        tempstr.append(name[count]);
-        tempstr.append(",");
-        tempstr.append(email[count]);
-        tempstr.append(",");
-        tempstr.append(address[count]);
-        tempstr.append(",");
-        tempstr.append(pass[count]);
-        outputFile << tempstr << endl;
-    }
-    rename("temp.csv", "users.csv");
-}
-
 string ItemInfo::getitemName(string ID)
 {
+
     for(int i=0;i<itemID.size();i++)
     {
         if(ID==itemID[i])
@@ -250,11 +174,11 @@ int ItemInfo::getInventory(string ID)
     }
     return 0;
 }
-float ItemInfo::getPrice(string ID)
+double ItemInfo::getPrice(string ID)
 {
     for(unsigned int i=0;i<itemID.size();i++)
     {
-        if(itemID[i]==ID)
+        if(itemID[i].find(ID)!=std::string::npos)
         {
             return Price[i];
         }
@@ -332,32 +256,29 @@ void ItemInfo::ItemOrder(string name,int amount)
     quaitiy.insert(quaitiy.begin()+e,te);
 
 }
-
-Cart::Cart(){
-    ifstream inputFile("users.csv");
-
-    vector<string> newList;
-    int count = 0;
-
-    while(inputFile){
-        newList = getNextLineAndSplitIntoTokens(inputFile);
-        for(int i = 5; i < newList.size(); i++){
-            addItem(newList[i]);
+string shop::is_Empty(string username)
+{
+    if(!ca.empty())
+    {
+        string trs;
+        // insert the vector back into the txt file
+        for(int i=0;i<ca.size();i++)
+        {
+            trs+=ca[i]+"_";
         }
+        return trs;
     }
 }
-
-void Cart::display()
+void shop::display(vector<string>&list)
 {
     ItemInfo pp;
     string nn,qq,ee;
     int num=0,aa=0;
-    string tt="JW-0001";
-    cout<<"Name: "<<pp.getitemName(tt)<<endl;
-    for(int i=0;i<cart.size();i++)
+    for(int i=0;i<list.size();i++)
     {
-        nn=cart[i];
-        int to = stoi(cart[i]);
+        nn=list[i];
+        int to = stoi(list[i]);
+        /*
          aa=to;
         while(aa!=0)
         {
@@ -367,52 +288,52 @@ void Cart::display()
         nn.erase(0,num);
         nn.erase(0,1);
         num=0;
-        string tt="JW-0001";
-        cout<<"Name: "<<pp.getitemName(tt)<<endl;
+        cout<<"Name: "<<pp.getitemName(nn)<<endl;
         cout<<"Amount wanted: "<<to<<endl;
          cout<<endl;
+         */
     }
 
 }
-float Cart::totalPrice(string ID,int amount)
+float ItemInfo::totalPrice(string ID,int amount)
 {
     ItemInfo pp;
-    float qe =pp.getPrice(ID);
+    float qe =getPrice(ID);
     float rr=qe*amount;
     return rr;
 }
-void Cart::addItem(string qr)
+void shop::addItem(string qr)
 {
-    cout<<qr<<endl;
-    cart.push_back(qr);
+    ca.push_back(qr);
 }
-void Cart::insertCart(string car)
+void shop::insertCart(string car)
 {
-    cart.push_back(car);
+    ca.push_back(car);
+
 }
-bool Cart::removeItem(string qr)
+bool shop::removeItem(string qr)
 {
-    for(unsigned int i=0;i<cart.size();i++)
+    for(unsigned int i=0;i<ca.size();i++)
     {
-        if(cart[i].find(qr)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
+        if(ca[i].find(qr)!=std::string::npos)// it makes it to where only certian type of items ar edisplay instead of all of them
         {
-            cart.erase(cart.begin()+i);
+            ca.erase(ca.begin()+i);
             return true;
         }
     }
     return false;
 }
-
-void Cart::checkout()
+/*
+void shop::checkout(vector<string>&list)
 {
     ItemInfo pp;
     string nn,qq,ee;
     int num=0,aa=0;
     float ad=0;
-    for(int i=0;i<cart.size();i++)
+    for(int i=0;i<list.size();i++)
     {
-        nn=cart[i];
-        int to = stoi(cart[i]);
+        nn=ca[i];
+        int to = stoi(ca[i]);
          aa=to;
         while(aa!=0)
         {
@@ -429,75 +350,13 @@ void Cart::checkout()
     cout<<"Total Price: "<<ad<<endl;
      cout<<endl;
 }
+*/
+bool shop::purchase()
+{ ItemInfo pp;
 
-bool Cart::purchase()
-{ItemInfo pp;
-
-    cart.clear();
+    ca.clear();
     return true;
 }
 
 
-string Cart::is_Empty(string username)
-{
-    if(!cart.empty())
-    {
-        string trs;
-        // insert the vector back into the txt file
-        for(int i=0;i<cart.size();i++)
-        {
-            trs+=cart[i]+"_";
-        }
-        return trs;
-    }
-}
 
-void Cart::exportUsers(string currentUser){
-    ifstream inputFile("users.csv");
-    ofstream outputFile("temp.csv");
-    string tempstr;
-    int count;
-    while(!inputFile.eof())
-    {
-         vector<string> newList = getNextLineAndSplitIntoTokens(inputFile);
-        if(newList[1] == currentUser && cart.size() > 0){
-            tempstr = ","; 
-            for(int i = 0; i < cart.size(); i++){
-                tempstr = tempstr + cart[i] + ",";
-            }
-        }
-        else{
-            tempstr = "";
-            for(int i = 0; i < newList.size(); i++){
-                tempstr = tempstr + newList[i] + ",";
-            }
-        }
-        outputFile << tempstr << endl;
-        count += 1;
-
-    }
-    rename("temp.csv", "users.csv");
-}
-
-
-// Tokenizes each comma-separated item from an input file stream for a single line
-vector<string> getNextLineAndSplitIntoTokens(istream& str)
-{
-    vector<string> result;
-    string line, cell;
-    getline(str,line);
-
-    stringstream lineStream(line);
-
-    while(getline(lineStream,cell, ','))
-    {
-        result.push_back(cell);
-    }
-    // This checks for a trailing comma with no data after it.
-    if (!lineStream && cell.empty())
-    {
-        // If there was a trailing comma then add an empty element.
-        result.push_back("");
-    }
-    return result;
-}
