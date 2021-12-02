@@ -10,46 +10,12 @@ using namespace std;
 int main()
 {
 
-    ifstream infile;
-    ofstream outfile;
-    string ttk1,ttk2,ttk3,ttk4,ttk5;
     int num1;
     float flo1;
-    userInfo u;
+    userInfo u; 
     ItemInfo pp;
     Cart q;
 
-    infile.open("Username.txt");// insert
-    if(!infile.is_open())
-    {
-        cout<<"Error opening."<<endl;
-        return 1;
-    }
-    while(!infile.eof())
-    {
-    infile >>ttk1>>ttk2>>ttk3>>ttk4>>ttk5;
-    if(!infile.fail())
-    {
-        u.insertUser(ttk1,ttk2,ttk3,ttk4,ttk5);
-    }
-    }
-    infile.close();
-    infile.open("inventory.txt");// insert
-
-    if(!infile.is_open())
-    {
-        cout<<"Error opening."<<endl;
-        return 1;
-    }
-    while(!infile.eof())
-    {
-    infile >>ttk2>>ttk1>>num1>>flo1;
-    if(!infile.fail())
-    {
-        pp.insertItem(ttk1,ttk2,num1,flo1);
-    }
-    }
-    infile.close();
 
     string username, password,qu,cat,wan;
     string ss;
@@ -274,8 +240,8 @@ int main()
        //if the user want to exit the program they type exit
     } while (ss!="exit");
     //when the user exits the input screen use the out line function to reinsert the vector infomation back into their apporite files
-   string str= q.is_Empty(username);
-   string tte=u.getUserID(username);
+    u.exportUsers(username);
+    //q.exportUsers(username);
 return 0;
 
 }
