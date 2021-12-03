@@ -40,7 +40,6 @@ void userInfo::editAccount(string username) // replaceing the current user's inf
 
 
 }
-
 void userInfo::insertUser(string na, string ID, string mail, string add, string password)
 {
     email.push_back(mail);
@@ -96,7 +95,6 @@ bool userInfo::removeAccount(string word)
 }
 void userInfo::displayUser(string username)
 {
-    userInfo u;
     for(unsigned int i=0;i<name.size();i++)
     {
 
@@ -156,7 +154,6 @@ string ItemInfo::getitemName(string ID)
     {
         if(ID==itemID[i])
         {
-            cout<<itemName[i]<<endl;
             return itemName[i];
         }
     }
@@ -242,20 +239,44 @@ bool ItemInfo::quantiy_check(string name,string amount)
 
 void ItemInfo::ItemOrder(string name,int amount)
 {
-    int we=0,te,e=0;
-    for(unsigned int i=0; i<itemName.size();i++)
+    for(unsigned int i=0; i<itemID.size();i++)
     {
-        if(name==itemName[i])
+        if(name==itemID[i])
         {
-            te =getInventory(itemID[i]);
-            te=te-amount;
-            e=we;
+            quaitiy[i]=quaitiy[i]-amount;
         }
-        we++;
     }
-    quaitiy.insert(quaitiy.begin()+e,te);
 
 }
+
+void ItemInfo::InsertCart(vector<string> &rt, string list)
+{
+    string nn,ww;
+    int num=0;
+    list.erase(remove(list.begin(),list.end(), '_'), list.end());
+    while(!list.empty()){
+    int to = stoi(list);
+     int aa=to;
+    while(aa!=0)
+    {
+        aa/=10;
+        num++;
+    }
+    list.erase(0,num);
+    list.erase(0,1);
+    num=0;
+    for(int i=0;i<7;i++)
+    {
+        ww=ww+list[i];
+    }
+    string str=to_string(to);
+    nn=str+"x"+ww;
+    ww.clear();
+    rt.push_back(nn);
+    list.erase(0,7);
+    }
+}
+
 string shop::is_Empty(string username)
 {
     if(!ca.empty())

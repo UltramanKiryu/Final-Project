@@ -81,6 +81,24 @@ int main()
             cout<<"Sorry, Please try again"<<endl;
 
         }
+        string rr,tt;
+        infile.open("Cart.txt");// insert any infomation that was still in the cart is now reinsert back into the cart
+
+        if(!infile.is_open())
+        {
+            cout<<"Error opening."<<endl;
+            return 1;
+        }
+        if(!infile.eof())
+        {
+            infile >>rr>>tt;
+            if(rr==u.getUserID(username))
+            {
+
+                pp.InsertCart(qqq,tt);
+            }
+        }
+        infile.close();
     } while (hh==false);
     do {
         cout<<"Welcome to the Team 24 e-commerce"<<endl;
@@ -175,7 +193,7 @@ int main()
           while(want !="back")
           {
               cout<<"Welcome to the Toys catagory"<<endl;
-             pp.displayItem("TO");// this will only display the Toys items
+             pp.displayItem("FO");// this will only display the Toys items
              cout<<"Which one you want to buy or type back to return to the main menu: ";
              getline(cin,want);
               if(want !="back"){
@@ -274,6 +292,7 @@ int main()
                     num=0;
                     float t=pp.totalPrice(nn,to);
                     ad+=t;
+
                      pp.ItemOrder(nn,to);
                 }
                 cout<<"Total Price: "<<ad<<endl;
@@ -313,27 +332,32 @@ int main()
        else if (ss=="exit")
        {
            cout<<"Thank you for using this website"<<endl;
+           string tte=u.getUserID(username);
+           string trs;
+           if(!qqq.empty())
+           {
+               // insert the vector back into the txt file
+               for(int i=0;i<qqq.size();i++)
+               {
+                   trs+=qqq[i]+"_";
+               }
+           }
+          if(!trs.empty())
+          {
+              outfile.open("Cart.txt"); // this will delete whatever is in the text file
+              if(!outfile.is_open())
+              {
+                  cout<<"Error opening."<<endl;
+              }
+              outfile<<tte<<trs<<endl;
+              outfile.close();
+          }
+
        }
        //if the user want to exit the program they type exit
     } while (ss!="exit");
     //when the user exits the input screen use the out line function to reinsert the vector infomation back into their apporite files
-   string tte=u.getUserID(username);
-   string trs;
-   if(!qqq.empty())
-   {
-       // insert the vector back into the txt file
-       for(int i=0;i<qqq.size();i++)
-       {
-           trs+=qqq[i]+"_";
-       }
-   }
-   outfile.open("Cart.txt"); // this will delete whatever is in the text file
-   if(!outfile.is_open())
-   {
-       cout<<"Error opening."<<endl;
-   }
-   outfile<<tte<<trs<<endl;
-   outfile.close();
+
 return 0;
 
 }

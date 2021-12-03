@@ -1,6 +1,7 @@
 #ifndef USER_H
 #define USER_H
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include<string>
 #include<cstdlib>
@@ -47,6 +48,7 @@ public:
     double getPrice(string ID);
     float totalPrice(string ID,int amount);
     bool quantiy_check(string name,string amount);
+    void InsertCart(vector<string>&rt, string list);
 
 };
 
